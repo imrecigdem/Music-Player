@@ -1,0 +1,506 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="muzik_arsiviModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Kullanici">
+          <Key>
+            <PropertyRef Name="kullanici_id" />
+          </Key>
+          <Property Name="kullanici_id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kullanici_eposta" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="parola" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="kullanici_ismi" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KullaniciHareket">
+          <Key>
+            <PropertyRef Name="hareket_id" />
+          </Key>
+          <Property Name="hareket_id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kullanici_id" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="yaratılma_tarihi" Type="datetime" />
+          <Property Name="hareket_mesaj" Type="nvarchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="Oynatma_Listesi">
+          <Key>
+            <PropertyRef Name="oynatma_listesi_id" />
+          </Key>
+          <Property Name="oynatma_listesi_id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kullanici_id" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="sarki_id" Type="numeric" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="Sarki">
+          <Key>
+            <PropertyRef Name="sarki_id" />
+          </Key>
+          <Property Name="sarki_id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sanatci_ismi" Type="nvarchar" MaxLength="100" />
+          <Property Name="album_ismi" Type="nvarchar" MaxLength="100" />
+          <Property Name="sarki_ismi" Type="nvarchar" MaxLength="100" />
+          <Property Name="album_sirasi" Type="int" />
+          <Property Name="sarki_dakikasi" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="sarki_hakkinda" Type="nvarchar" MaxLength="1000" />
+          <Property Name="sarki_türü" Type="nvarchar" MaxLength="1000" />
+          <Property Name="sarki_dosya_ismi" Type="nvarchar" MaxLength="1000" />
+          <Property Name="kullanici_id" Type="numeric" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="Sarki_Begenme">
+          <Key>
+            <PropertyRef Name="sarki_begenme_id" />
+          </Key>
+          <Property Name="sarki_id" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="kullanici_id" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="sarki_begenme_id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Takipci">
+          <Key>
+            <PropertyRef Name="takipci_id" />
+          </Key>
+          <Property Name="takipci_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="takip_eden_kullanici_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="takip_edilen_kullanici_id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_KullaniciHareket_Kullanici">
+          <End Role="Kullanici" Type="Self.Kullanici" Multiplicity="0..1" />
+          <End Role="KullaniciHareket" Type="Self.KullaniciHareket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="KullaniciHareket">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Oynatma_Listesi_Kullanici">
+          <End Role="Kullanici" Type="Self.Kullanici" Multiplicity="0..1" />
+          <End Role="Oynatma_Listesi" Type="Self.Oynatma_Listesi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Oynatma_Listesi">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Oynatma_Listesi_Sarki">
+          <End Role="Sarki" Type="Self.Sarki" Multiplicity="0..1" />
+          <End Role="Oynatma_Listesi" Type="Self.Oynatma_Listesi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sarki">
+              <PropertyRef Name="sarki_id" />
+            </Principal>
+            <Dependent Role="Oynatma_Listesi">
+              <PropertyRef Name="sarki_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sarki_Begenme_Kullanici">
+          <End Role="Kullanici" Type="Self.Kullanici" Multiplicity="0..1" />
+          <End Role="Sarki_Begenme" Type="Self.Sarki_Begenme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Sarki_Begenme">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sarki_Begenme_Sarki">
+          <End Role="Sarki" Type="Self.Sarki" Multiplicity="0..1" />
+          <End Role="Sarki_Begenme" Type="Self.Sarki_Begenme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sarki">
+              <PropertyRef Name="sarki_id" />
+            </Principal>
+            <Dependent Role="Sarki_Begenme">
+              <PropertyRef Name="sarki_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sarki_Kullanici">
+          <End Role="Kullanici" Type="Self.Kullanici" Multiplicity="0..1" />
+          <End Role="Sarki" Type="Self.Sarki" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Sarki">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Takipci_Kullanici">
+          <End Role="Kullanici" Type="Self.Kullanici" Multiplicity="1" />
+          <End Role="Takipci" Type="Self.Takipci" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Takipci">
+              <PropertyRef Name="takip_eden_kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Takipci_Kullanici1">
+          <End Role="Kullanici" Type="Self.Kullanici" Multiplicity="1" />
+          <End Role="Takipci" Type="Self.Takipci" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Takipci">
+              <PropertyRef Name="takip_edilen_kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="muzik_arsiviModelStoreContainer">
+          <EntitySet Name="Kullanici" EntityType="Self.Kullanici" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KullaniciHareket" EntityType="Self.KullaniciHareket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Oynatma_Listesi" EntityType="Self.Oynatma_Listesi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sarki" EntityType="Self.Sarki" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sarki_Begenme" EntityType="Self.Sarki_Begenme" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Takipci" EntityType="Self.Takipci" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_KullaniciHareket_Kullanici" Association="Self.FK_KullaniciHareket_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="KullaniciHareket" EntitySet="KullaniciHareket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Oynatma_Listesi_Kullanici" Association="Self.FK_Oynatma_Listesi_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Oynatma_Listesi" EntitySet="Oynatma_Listesi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Oynatma_Listesi_Sarki" Association="Self.FK_Oynatma_Listesi_Sarki">
+            <End Role="Sarki" EntitySet="Sarki" />
+            <End Role="Oynatma_Listesi" EntitySet="Oynatma_Listesi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sarki_Begenme_Kullanici" Association="Self.FK_Sarki_Begenme_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Sarki_Begenme" EntitySet="Sarki_Begenme" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sarki_Begenme_Sarki" Association="Self.FK_Sarki_Begenme_Sarki">
+            <End Role="Sarki" EntitySet="Sarki" />
+            <End Role="Sarki_Begenme" EntitySet="Sarki_Begenme" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sarki_Kullanici" Association="Self.FK_Sarki_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Sarki" EntitySet="Sarki" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Takipci_Kullanici" Association="Self.FK_Takipci_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Takipci" EntitySet="Takipci" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Takipci_Kullanici1" Association="Self.FK_Takipci_Kullanici1">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Takipci" EntitySet="Takipci" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="muzik_arsiviModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Kullanici">
+          <Key>
+            <PropertyRef Name="kullanici_id" />
+          </Key>
+          <Property Name="kullanici_id" Type="Decimal" Precision="18" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kullanici_eposta" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="parola" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="kullanici_ismi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Sarki_Begenme" Relationship="muzik_arsiviModel.FK_Sarki_Begenme_Kullanici" FromRole="Kullanici" ToRole="Sarki_Begenme" />
+          <NavigationProperty Name="Sarki" Relationship="muzik_arsiviModel.FK_Sarki_Kullanici" FromRole="Kullanici" ToRole="Sarki" />
+          <NavigationProperty Name="Takipci" Relationship="muzik_arsiviModel.FK_Takipci_Kullanici" FromRole="Kullanici" ToRole="Takipci" />
+          <NavigationProperty Name="Takipci1" Relationship="muzik_arsiviModel.FK_Takipci_Kullanici1" FromRole="Kullanici" ToRole="Takipci" />
+          <NavigationProperty Name="KullaniciHareket" Relationship="muzik_arsiviModel.FK_KullaniciHareket_Kullanici" FromRole="Kullanici" ToRole="KullaniciHareket" />
+          <NavigationProperty Name="Oynatma_Listesi" Relationship="muzik_arsiviModel.FK_Oynatma_Listesi_Kullanici" FromRole="Kullanici" ToRole="Oynatma_Listesi" />
+        </EntityType>
+        <EntityContainer Name="muzik_arsiviEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Kullanici" EntityType="Self.Kullanici" />
+          <EntitySet Name="Sarki" EntityType="muzik_arsiviModel.Sarki" />
+          <EntitySet Name="Sarki_Begenme" EntityType="muzik_arsiviModel.Sarki_Begenme" />
+          <EntitySet Name="Takipci" EntityType="muzik_arsiviModel.Takipci" />
+          <AssociationSet Name="FK_Sarki_Begenme_Kullanici" Association="muzik_arsiviModel.FK_Sarki_Begenme_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Sarki_Begenme" EntitySet="Sarki_Begenme" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sarki_Kullanici" Association="muzik_arsiviModel.FK_Sarki_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Sarki" EntitySet="Sarki" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Takipci_Kullanici" Association="muzik_arsiviModel.FK_Takipci_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Takipci" EntitySet="Takipci" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Takipci_Kullanici1" Association="muzik_arsiviModel.FK_Takipci_Kullanici1">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Takipci" EntitySet="Takipci" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sarki_Begenme_Sarki" Association="muzik_arsiviModel.FK_Sarki_Begenme_Sarki">
+            <End Role="Sarki" EntitySet="Sarki" />
+            <End Role="Sarki_Begenme" EntitySet="Sarki_Begenme" />
+          </AssociationSet>
+          <EntitySet Name="KullaniciHareket" EntityType="muzik_arsiviModel.KullaniciHareket" />
+          <AssociationSet Name="FK_KullaniciHareket_Kullanici" Association="muzik_arsiviModel.FK_KullaniciHareket_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="KullaniciHareket" EntitySet="KullaniciHareket" />
+          </AssociationSet>
+          <EntitySet Name="Oynatma_Listesi" EntityType="muzik_arsiviModel.Oynatma_Listesi" />
+          <AssociationSet Name="FK_Oynatma_Listesi_Kullanici" Association="muzik_arsiviModel.FK_Oynatma_Listesi_Kullanici">
+            <End Role="Kullanici" EntitySet="Kullanici" />
+            <End Role="Oynatma_Listesi" EntitySet="Oynatma_Listesi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Oynatma_Listesi_Sarki" Association="muzik_arsiviModel.FK_Oynatma_Listesi_Sarki">
+            <End Role="Sarki" EntitySet="Sarki" />
+            <End Role="Oynatma_Listesi" EntitySet="Oynatma_Listesi" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Sarki">
+          <Key>
+            <PropertyRef Name="sarki_id" />
+          </Key>
+          <Property Name="sarki_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="sanatci_ismi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="album_ismi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="sarki_ismi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="album_sirasi" Type="Int32" />
+          <Property Name="sarki_dakikasi" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="sarki_hakkinda" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="sarki_türü" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="sarki_dosya_ismi" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="kullanici_id" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="Kullanici" Relationship="muzik_arsiviModel.FK_Sarki_Kullanici" FromRole="Sarki" ToRole="Kullanici" />
+          <NavigationProperty Name="Sarki_Begenme" Relationship="muzik_arsiviModel.FK_Sarki_Begenme_Sarki" FromRole="Sarki" ToRole="Sarki_Begenme" />
+          <NavigationProperty Name="Oynatma_Listesi" Relationship="muzik_arsiviModel.FK_Oynatma_Listesi_Sarki" FromRole="Sarki" ToRole="Oynatma_Listesi" />
+        </EntityType>
+        <EntityType Name="Sarki_Begenme">
+          <Key>
+            <PropertyRef Name="sarki_begenme_id" />
+          </Key>
+          <Property Name="sarki_id" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="kullanici_id" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="sarki_begenme_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="Kullanici" Relationship="muzik_arsiviModel.FK_Sarki_Begenme_Kullanici" FromRole="Sarki_Begenme" ToRole="Kullanici" />
+          <NavigationProperty Name="Sarki" Relationship="muzik_arsiviModel.FK_Sarki_Begenme_Sarki" FromRole="Sarki_Begenme" ToRole="Sarki" />
+        </EntityType>
+        <EntityType Name="Takipci">
+          <Key>
+            <PropertyRef Name="takipci_id" />
+          </Key>
+          <Property Name="takipci_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="takip_eden_kullanici_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="takip_edilen_kullanici_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="Kullanici" Relationship="muzik_arsiviModel.FK_Takipci_Kullanici" FromRole="Takipci" ToRole="Kullanici" />
+          <NavigationProperty Name="Kullanici1" Relationship="muzik_arsiviModel.FK_Takipci_Kullanici1" FromRole="Takipci" ToRole="Kullanici" />
+        </EntityType>
+        <Association Name="FK_Sarki_Begenme_Kullanici">
+          <End Type="muzik_arsiviModel.Kullanici" Role="Kullanici" Multiplicity="0..1" />
+          <End Type="muzik_arsiviModel.Sarki_Begenme" Role="Sarki_Begenme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Sarki_Begenme">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sarki_Kullanici">
+          <End Type="muzik_arsiviModel.Kullanici" Role="Kullanici" Multiplicity="0..1" />
+          <End Type="muzik_arsiviModel.Sarki" Role="Sarki" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Sarki">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Takipci_Kullanici">
+          <End Type="muzik_arsiviModel.Kullanici" Role="Kullanici" Multiplicity="1" />
+          <End Type="muzik_arsiviModel.Takipci" Role="Takipci" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Takipci">
+              <PropertyRef Name="takip_eden_kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Takipci_Kullanici1">
+          <End Type="muzik_arsiviModel.Kullanici" Role="Kullanici" Multiplicity="1" />
+          <End Type="muzik_arsiviModel.Takipci" Role="Takipci" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Takipci">
+              <PropertyRef Name="takip_edilen_kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sarki_Begenme_Sarki">
+          <End Type="muzik_arsiviModel.Sarki" Role="Sarki" Multiplicity="0..1" />
+          <End Type="muzik_arsiviModel.Sarki_Begenme" Role="Sarki_Begenme" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sarki">
+              <PropertyRef Name="sarki_id" />
+            </Principal>
+            <Dependent Role="Sarki_Begenme">
+              <PropertyRef Name="sarki_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="KullaniciHareket">
+          <Key>
+            <PropertyRef Name="hareket_id" />
+          </Key>
+          <Property Name="hareket_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kullanici_id" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="yaratılma_tarihi" Type="DateTime" Precision="3" />
+          <Property Name="hareket_mesaj" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Kullanici" Relationship="muzik_arsiviModel.FK_KullaniciHareket_Kullanici" FromRole="KullaniciHareket" ToRole="Kullanici" />
+        </EntityType>
+        <Association Name="FK_KullaniciHareket_Kullanici">
+          <End Type="muzik_arsiviModel.Kullanici" Role="Kullanici" Multiplicity="0..1" />
+          <End Type="muzik_arsiviModel.KullaniciHareket" Role="KullaniciHareket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="KullaniciHareket">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Oynatma_Listesi">
+          <Key>
+            <PropertyRef Name="oynatma_listesi_id" />
+          </Key>
+          <Property Name="oynatma_listesi_id" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kullanici_id" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="sarki_id" Type="Decimal" Precision="18" Scale="0" />
+          <NavigationProperty Name="Kullanici" Relationship="muzik_arsiviModel.FK_Oynatma_Listesi_Kullanici" FromRole="Oynatma_Listesi" ToRole="Kullanici" />
+          <NavigationProperty Name="Sarki" Relationship="muzik_arsiviModel.FK_Oynatma_Listesi_Sarki" FromRole="Oynatma_Listesi" ToRole="Sarki" />
+        </EntityType>
+        <Association Name="FK_Oynatma_Listesi_Kullanici">
+          <End Type="muzik_arsiviModel.Kullanici" Role="Kullanici" Multiplicity="0..1" />
+          <End Type="muzik_arsiviModel.Oynatma_Listesi" Role="Oynatma_Listesi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanici">
+              <PropertyRef Name="kullanici_id" />
+            </Principal>
+            <Dependent Role="Oynatma_Listesi">
+              <PropertyRef Name="kullanici_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Oynatma_Listesi_Sarki">
+          <End Type="muzik_arsiviModel.Sarki" Role="Sarki" Multiplicity="0..1" />
+          <End Type="muzik_arsiviModel.Oynatma_Listesi" Role="Oynatma_Listesi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sarki">
+              <PropertyRef Name="sarki_id" />
+            </Principal>
+            <Dependent Role="Oynatma_Listesi">
+              <PropertyRef Name="sarki_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="muzik_arsiviModelStoreContainer" CdmEntityContainer="muzik_arsiviEntities">
+          <EntitySetMapping Name="Kullanici">
+            <EntityTypeMapping TypeName="muzik_arsiviModel.Kullanici">
+              <MappingFragment StoreEntitySet="Kullanici">
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="kullanici_eposta" ColumnName="kullanici_eposta" />
+                <ScalarProperty Name="parola" ColumnName="parola" />
+                <ScalarProperty Name="kullanici_ismi" ColumnName="kullanici_ismi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sarki">
+            <EntityTypeMapping TypeName="muzik_arsiviModel.Sarki">
+              <MappingFragment StoreEntitySet="Sarki">
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="sarki_dosya_ismi" ColumnName="sarki_dosya_ismi" />
+                <ScalarProperty Name="sarki_türü" ColumnName="sarki_türü" />
+                <ScalarProperty Name="sarki_hakkinda" ColumnName="sarki_hakkinda" />
+                <ScalarProperty Name="sarki_dakikasi" ColumnName="sarki_dakikasi" />
+                <ScalarProperty Name="album_sirasi" ColumnName="album_sirasi" />
+                <ScalarProperty Name="sarki_ismi" ColumnName="sarki_ismi" />
+                <ScalarProperty Name="album_ismi" ColumnName="album_ismi" />
+                <ScalarProperty Name="sanatci_ismi" ColumnName="sanatci_ismi" />
+                <ScalarProperty Name="sarki_id" ColumnName="sarki_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sarki_Begenme">
+            <EntityTypeMapping TypeName="muzik_arsiviModel.Sarki_Begenme">
+              <MappingFragment StoreEntitySet="Sarki_Begenme">
+                <ScalarProperty Name="sarki_begenme_id" ColumnName="sarki_begenme_id" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="sarki_id" ColumnName="sarki_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Takipci">
+            <EntityTypeMapping TypeName="muzik_arsiviModel.Takipci">
+              <MappingFragment StoreEntitySet="Takipci">
+                <ScalarProperty Name="takip_edilen_kullanici_id" ColumnName="takip_edilen_kullanici_id" />
+                <ScalarProperty Name="takip_eden_kullanici_id" ColumnName="takip_eden_kullanici_id" />
+                <ScalarProperty Name="takipci_id" ColumnName="takipci_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KullaniciHareket">
+            <EntityTypeMapping TypeName="muzik_arsiviModel.KullaniciHareket">
+              <MappingFragment StoreEntitySet="KullaniciHareket">
+                <ScalarProperty Name="hareket_mesaj" ColumnName="hareket_mesaj" />
+                <ScalarProperty Name="yaratılma_tarihi" ColumnName="yaratılma_tarihi" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="hareket_id" ColumnName="hareket_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Oynatma_Listesi">
+            <EntityTypeMapping TypeName="muzik_arsiviModel.Oynatma_Listesi">
+              <MappingFragment StoreEntitySet="Oynatma_Listesi">
+                <ScalarProperty Name="sarki_id" ColumnName="sarki_id" />
+                <ScalarProperty Name="kullanici_id" ColumnName="kullanici_id" />
+                <ScalarProperty Name="oynatma_listesi_id" ColumnName="oynatma_listesi_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
